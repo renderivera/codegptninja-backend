@@ -1,12 +1,20 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const openai = require("./openaiWrapper");
 
 const port = process.env.PORT;
 
 const app = express();
 
-app.get("/api/code", (req, res) => {
+app.use(
+	cors({
+		origin: "http://localhost:3000",
+	}),
+	express.json()
+);
+
+app.post("/api/code", (req, res) => {
 	if (!req.body?.prompt) {
 		res.status = 400;
 		res.send({
