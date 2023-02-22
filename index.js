@@ -4,40 +4,42 @@ const cors = require("cors");
 const openai = require("./openaiWrapper");
 
 const port = process.env.PORT;
+const corsOrigin = process.env.CORSORIGIN;
 
 const app = express();
 
 app.use(
 	cors({
-		origin: "http://localhost:3000",
+		origin: corsOrigin,
 	}),
 	express.json()
 );
 
-app.post("/api/code", (req, res) => {
+const verifyReq = (req, res) => {
 	if (!req.body?.prompt) {
-		res.status = 400;
-		res.send({
+		res.status(400).json({
 			error: "prompt in body is missing",
 		});
-		return;
+		return false;
 	}
+	return true;
+};
+
+app.post("/api/code", (req, res) => {
+	if (!verifyReq(req, res)) return;
 
 	const prompt = req.body.prompt;
 
 	openai
 		.writeCode(prompt)
-		.then((ores) => {
-			res.send({
-				code: ores,
-			});
+		.then((code) => {
+			res.json({ code });
 		})
 		.catch((error) => {
-			res.status = 500;
-			res.send({
-				error: error,
-			});
+			res.status(500).json({ error });
 		});
 });
 
-app.listen(port);
+app.listen(port, () => {
+	console.log(`Server running on port ${port}...`);
+});
