@@ -16,7 +16,7 @@ const verifyReq = (req, res) => {
 	return true;
 };
 
-app.post("/api/writecode", (req, res) => {
+app.post("/writecode", (req, res) => {
 	if (!verifyReq(req, res)) return;
 	const prompt = req.body.prompt;
 
@@ -26,7 +26,7 @@ app.post("/api/writecode", (req, res) => {
 		.catch((error) => res.status(error.status).send({ error: error.statusText }));
 });
 
-app.post("/api/explaincode", (req, res) => {
+app.post("/explaincode", (req, res) => {
 	if (!verifyReq(req, res)) return;
 	const prompt = req.body.prompt;
 
@@ -36,7 +36,7 @@ app.post("/api/explaincode", (req, res) => {
 		.catch((error) => res.status(error.status).send({ error: error.statusText }));
 });
 
-app.post("/api/writeunittest", (req, res) => {
+app.post("/writeunittest", (req, res) => {
 	if (!verifyReq(req, res)) return;
 	const prompt = req.body.prompt;
 
