@@ -23,7 +23,9 @@ app.post("/writecode", (req, res) => {
 	openai
 		.writeCode(prompt)
 		.then((ai) => res.json({ ai }))
-		.catch((error) => res.status(error.status).send({ error: error.statusText }));
+		.catch((error) =>
+			res.status(error.status).send({ error: error.statusText })
+		);
 });
 
 app.post("/explaincode", (req, res) => {
@@ -33,17 +35,9 @@ app.post("/explaincode", (req, res) => {
 	openai
 		.explainCode(prompt)
 		.then((ai) => res.json({ ai }))
-		.catch((error) => res.status(error.status).send({ error: error.statusText }));
-});
-
-app.post("/writeunittest", (req, res) => {
-	if (!verifyReq(req, res)) return;
-	const prompt = req.body.prompt;
-
-	openai
-		.writeUnitTest(prompt)
-		.then((ai) => res.json({ ai }))
-		.catch((error) => res.status(error.status).send({ error: error.statusText }));
+		.catch((error) =>
+			res.status(error.status).send({ error: error.statusText })
+		);
 });
 
 app.listen(port, () => console.log(`Server running on port ${port}...`));

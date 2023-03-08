@@ -15,18 +15,6 @@ const completionTemplate = {
 	stop: ['"""', "/*"], // needed to stop openai codex to return multiple responses sometimes
 };
 
-const explainPromptAddon = `
-
-"""
-What is this code doing?
-1. `; //some prompt engineering to get a half decent response from openai in form of a list
-
-const testPromptAddon = `
-
-"""
-Write unit test for this code.
-"""`;
-
 function getTextFromResponse(response) {
 	return response.data.choices[0].text;
 }
@@ -40,7 +28,7 @@ function writeCode(prompt) {
 		openaiAPI
 			.createCompletion({
 				...completionTemplate,
-				prompt: `/*write a ${prompt}*/`,
+				prompt: `/*write ${prompt.text} in ${prompt.langLabel}*/`,
 			})
 			.then((response) => {
 				return resolve(getTextFromResponse(response).trim()); //sometimes empty lines etc in the beginning so trim()
@@ -56,7 +44,11 @@ function explainCode(prompt) {
 		openaiAPI
 			.createCompletion({
 				...completionTemplate,
-				prompt: `${prompt} ${explainPromptAddon}`,
+				prompt: `${prompt.text}
+
+"""
+What is this ${prompt.langLabel} code doing?
+1. `, //some prompt engineering to get a half decent response from openai in form of a list
 			})
 			.then((response) => {
 				return resolve(`1. ${getTextFromResponse(response)}`); //add 1. as it was included in the prompt addon
@@ -66,21 +58,4 @@ function explainCode(prompt) {
 			});
 	});
 }
-
-function writeUnitTest(prompt) {
-	return new Promise((resolve, reject) => {
-		openaiAPI
-			.createCompletion({
-				...completionTemplate,
-				prompt: `${prompt} ${testPromptAddon}`,
-			})
-			.then((response) => {
-				return resolve(getTextFromResponse(response).trim()); //sometimes empty lines etc in the beginning so trim()
-			})
-			.catch((error) => {
-				return reject(getMsgFromError(error));
-			});
-	});
-}
-
-module.exports = { writeCode, explainCode, writeUnitTest };
+module.exports = { writeCode, explainCode };
