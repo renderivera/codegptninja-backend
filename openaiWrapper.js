@@ -6,13 +6,13 @@ const openaiConfig = new OpenAI.Configuration({
 const openaiAPI = new OpenAI.OpenAIApi(openaiConfig);
 
 const completionTemplate = {
-	model: "code-cushman-001",
+	model: "text-davinci-003",
 	temperature: 0,
-	max_tokens: 512,
-	top_p: 0.5,
-	frequency_penalty: 1,
-	presence_penalty: 1,
-	stop: ['"""', "/*"], // needed to stop openai codex to return multiple responses sometimes
+	max_tokens: 256,
+	top_p: 1,
+	frequency_penalty: 0,
+	presence_penalty: 0,
+	stop: ['"""', "/*"], //needed to stop multiple responses sometimes
 };
 
 function getTextFromResponse(response) {
@@ -47,8 +47,8 @@ function explainCode(prompt) {
 				prompt: `${prompt.text}
 
 """
-What is this ${prompt.langLabel} code doing?
-1. `, //some prompt engineering to get a half decent response from openai in form of a list
+Explain this ${prompt.langLabel} code, concisely:
+1.`,
 			})
 			.then((response) => {
 				return resolve(`1. ${getTextFromResponse(response)}`); //add 1. as it was included in the prompt addon
