@@ -51,7 +51,7 @@ Explain this ${prompt.langLabel} code, concisely:
 1.`,
 			})
 			.then((response) => {
-				return resolve(`1. ${getTextFromResponse(response)}`); //add 1. as it was included in the prompt addon
+				return resolve(`1.${getTextFromResponse(response)}`); //add 1. as it was included in the prompt addon
 			})
 			.catch((error) => {
 				return reject(getMsgFromError(error));
